@@ -1,0 +1,270 @@
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.46 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| vj                 |
++--------------------+
+5 rows in set (0.02 sec)
+
+mysql> show tables;
+ERROR 1046 (3D000): No database selected
+mysql> use vj;
+Database changed
+mysql> show tables;
++--------------+
+| Tables_in_vj |
++--------------+
+| companies    |
+| department   |
+| employee     |
++--------------+
+3 rows in set (0.07 sec)
+
+mysql> select * from companies;
++---------------------+----------------------+--------------+--------------+
+| company_name        | sector               | headquarters | started_year |
++---------------------+----------------------+--------------+--------------+
+| VJ Tech Giant       | Technology           | Chennai      |         2005 |
+| AgriFarmo           | Agriculture          | Tanjore      |         1990 |
+| KavithaHospitals    | Healthcare           | Chennai      |         1974 |
+| Dellas University   | Education            | Texas        |         1968 |
+| Nive Beauty Centres | Beauty and Cosmetics | Tiruvallur   |         2004 |
+| VJ MSE              | Economics            | City VJ      |         0000 |
+| VJ Sky              | Aerospace            | Trivandrum   |         0000 |
++---------------------+----------------------+--------------+--------------+
+7 rows in set (0.07 sec)
+
+mysql> select distinct company_name,sector from companies;
++---------------------+----------------------+
+| company_name        | sector               |
++---------------------+----------------------+
+| VJ Tech Giant       | Technology           |
+| AgriFarmo           | Agriculture          |
+| KavithaHospitals    | Healthcare           |
+| Dellas University   | Education            |
+| Nive Beauty Centres | Beauty and Cosmetics |
+| VJ MSE              | Economics            |
+| VJ Sky              | Aerospace            |
++---------------------+----------------------+
+7 rows in set (0.02 sec)
+
+mysql> select headquarters from companies where headquarters = "chennai";
++--------------+
+| headquarters |
++--------------+
+| Chennai      |
+| Chennai      |
++--------------+
+2 rows in set (0.01 sec)
+
+mysql> select started_year from companies where started_year > 2000;
++--------------+
+| started_year |
++--------------+
+|         2005 |
+|         2004 |
++--------------+
+2 rows in set (0.01 sec)
+
+mysql> select sector,company_name from companies order by sector,company_name asc;
++----------------------+---------------------+
+| sector               | company_name        |
++----------------------+---------------------+
+| Aerospace            | VJ Sky              |
+| Agriculture          | AgriFarmo           |
+| Beauty and Cosmetics | Nive Beauty Centres |
+| Economics            | VJ MSE              |
+| Education            | Dellas University   |
+| Healthcare           | KavithaHospitals    |
+| Technology           | VJ Tech Giant       |
++----------------------+---------------------+
+7 rows in set (0.01 sec)
+
+mysql> select started_year from companies where started_year is null;
+Empty set (0.00 sec)
+
+mysql> select sector from companies where sector is null;
+Empty set (0.00 sec)
+
+mysql> select started_year from companies where is not null;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'is not null' at line 1
+mysql> select started_year from companies where started_year is not null;
++--------------+
+| started_year |
++--------------+
+|         2005 |
+|         1990 |
+|         1974 |
+|         1968 |
+|         2004 |
+|         0000 |
+|         0000 |
++--------------+
+7 rows in set (0.00 sec)
+
+mysql> update companies set started_year = 2010 , 2015 where started_year = 0000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2015 where started_year = 0000' at line 1
+mysql> update companies set started_year = 2010 where started_year = 0000;
+Query OK, 2 rows affected (0.04 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select *  from companies ;
++---------------------+----------------------+--------------+--------------+
+| company_name        | sector               | headquarters | started_year |
++---------------------+----------------------+--------------+--------------+
+| VJ Tech Giant       | Technology           | Chennai      |         2005 |
+| AgriFarmo           | Agriculture          | Tanjore      |         1990 |
+| KavithaHospitals    | Healthcare           | Chennai      |         1974 |
+| Dellas University   | Education            | Texas        |         1968 |
+| Nive Beauty Centres | Beauty and Cosmetics | Tiruvallur   |         2004 |
+| VJ MSE              | Economics            | City VJ      |         2010 |
+| VJ Sky              | Aerospace            | Trivandrum   |         2010 |
++---------------------+----------------------+--------------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> update companies set company_name = "VJ MSE" , sector = "Economics" where started_year = 2015;
+Query OK, 0 rows affected (0.01 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select *  from companies ;
++---------------------+----------------------+--------------+--------------+
+| company_name        | sector               | headquarters | started_year |
++---------------------+----------------------+--------------+--------------+
+| VJ Tech Giant       | Technology           | Chennai      |         2005 |
+| AgriFarmo           | Agriculture          | Tanjore      |         1990 |
+| KavithaHospitals    | Healthcare           | Chennai      |         1974 |
+| Dellas University   | Education            | Texas        |         1968 |
+| Nive Beauty Centres | Beauty and Cosmetics | Tiruvallur   |         2004 |
+| VJ MSE              | Economics            | City VJ      |         2010 |
+| VJ Sky              | Aerospace            | Trivandrum   |         2010 |
++---------------------+----------------------+--------------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> update companies set started_year = 2010 where sector = "Economics";
+Query OK, 0 rows affected (0.01 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> select *  from companies ;
++---------------------+----------------------+--------------+--------------+
+| company_name        | sector               | headquarters | started_year |
++---------------------+----------------------+--------------+--------------+
+| VJ Tech Giant       | Technology           | Chennai      |         2005 |
+| AgriFarmo           | Agriculture          | Tanjore      |         1990 |
+| KavithaHospitals    | Healthcare           | Chennai      |         1974 |
+| Dellas University   | Education            | Texas        |         1968 |
+| Nive Beauty Centres | Beauty and Cosmetics | Tiruvallur   |         2004 |
+| VJ MSE              | Economics            | City VJ      |         2010 |
+| VJ Sky              | Aerospace            | Trivandrum   |         2010 |
++---------------------+----------------------+--------------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> update companies set started_year = 2015 where sector = "Economics";
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *  from companies ;
++---------------------+----------------------+--------------+--------------+
+| company_name        | sector               | headquarters | started_year |
++---------------------+----------------------+--------------+--------------+
+| VJ Tech Giant       | Technology           | Chennai      |         2005 |
+| AgriFarmo           | Agriculture          | Tanjore      |         1990 |
+| KavithaHospitals    | Healthcare           | Chennai      |         1974 |
+| Dellas University   | Education            | Texas        |         1968 |
+| Nive Beauty Centres | Beauty and Cosmetics | Tiruvallur   |         2004 |
+| VJ MSE              | Economics            | City VJ      |         2015 |
+| VJ Sky              | Aerospace            | Trivandrum   |         2010 |
++---------------------+----------------------+--------------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> select top 3 * from companies;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '3 * from companies' at line 1
+mysql> SELECT TOP 3 * FROM companies;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '3 * FROM companies' at line 1
+mysql> SELECT * FROM companies limit 3 ;
++------------------+-------------+--------------+--------------+
+| company_name     | sector      | headquarters | started_year |
++------------------+-------------+--------------+--------------+
+| VJ Tech Giant    | Technology  | Chennai      |         2005 |
+| AgriFarmo        | Agriculture | Tanjore      |         1990 |
+| KavithaHospitals | Healthcare  | Chennai      |         1974 |
++------------------+-------------+--------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM companies fetch first 50 percent rows only;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'fetch first 50 percent rows only' at line 1
+mysql> SELECT * FROM companies limit 50 ;
++---------------------+----------------------+--------------+--------------+
+| company_name        | sector               | headquarters | started_year |
++---------------------+----------------------+--------------+--------------+
+| VJ Tech Giant       | Technology           | Chennai      |         2005 |
+| AgriFarmo           | Agriculture          | Tanjore      |         1990 |
+| KavithaHospitals    | Healthcare           | Chennai      |         1974 |
+| Dellas University   | Education            | Texas        |         1968 |
+| Nive Beauty Centres | Beauty and Cosmetics | Tiruvallur   |         2004 |
+| VJ MSE              | Economics            | City VJ      |         2015 |
+| VJ Sky              | Aerospace            | Trivandrum   |         2010 |
++---------------------+----------------------+--------------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT * FROM companies limit 3 ; order by company_name asc;
++------------------+-------------+--------------+--------------+
+| company_name     | sector      | headquarters | started_year |
++------------------+-------------+--------------+--------------+
+| VJ Tech Giant    | Technology  | Chennai      |         2005 |
+| AgriFarmo        | Agriculture | Tanjore      |         1990 |
+| KavithaHospitals | Healthcare  | Chennai      |         1974 |
++------------------+-------------+--------------+--------------+
+3 rows in set (0.00 sec)
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by company_name asc' at line 1
+mysql> SELECT * FROM companies limit 3 order by company_name asc;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by company_name asc' at line 1
+mysql> SELECT company_name FROM companies order by company_name asc limit 3;
++-------------------+
+| company_name      |
++-------------------+
+| AgriFarmo         |
+| Dellas University |
+| KavithaHospitals  |
++-------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT company_name FROM companies order by company_name asc fetch first 3 rows only;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'fetch first 3 rows only' at line 1
+mysql> SELECT company_name FROM companies order by company_name asc limit 3 ;
++-------------------+
+| company_name      |
++-------------------+
+| AgriFarmo         |
+| Dellas University |
+| KavithaHospitals  |
++-------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT company_name FROM companies order by company_name desc limit 3 ;
++---------------+
+| company_name  |
++---------------+
+| VJ Tech Giant |
+| VJ Sky        |
+| VJ MSE        |
++---------------+
+3 rows in set (0.00 sec)
+
+mysql>
